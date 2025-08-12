@@ -93,7 +93,7 @@ function Wordle() {
       setGameOver(true);
       toast((t) => (
         <span>
-          'Congratulations! You guessed the word!
+          Congratulations! You guessed the word!
           <button onClick={() => {
             toast.dismiss(t.id)
             restartGame();
