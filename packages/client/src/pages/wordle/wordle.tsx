@@ -13,19 +13,33 @@ interface GuessResult {
 function Wordle() {
   const defaultValues = Array(WordLength).fill('');
 
+  const [gameOver, setGameOver] = React.useState<boolean>(false);
   const [answer, setAnswer] = React.useState<string>('');
   const [inputValues, setInputValues] = React.useState(defaultValues);
   const [guessResult, setGuessResult] = React.useState<GuessResult[][]>([]);
   const [attempt, setAttempt] = React.useState<number>(0);
 
   useEffect(() => {
-    const answer = WordList[Math.floor(Math.random() * WordList.length)];
-    setAnswer(answer);
+    pickAnswer();
   }, []);
 
   useEffect(() => {
     if (attempt >= GameRounds) {
-      console.log('Game Over! The answer is:', answer);
+      setGameOver(true);
+      toast((t) => (
+        <span>
+          Game Over! The answer is: {answer}
+          <button onClick={() => {
+            toast.dismiss(t.id)
+            restartGame();
+          }}>
+            Restart
+          </button>
+        </span>
+      ), {
+        icon: '😭',
+        duration: Infinity,
+      });
     }
   }, [attempt]);
 
@@ -75,8 +89,41 @@ function Wordle() {
 
     setAttempt(attempt + 1);
 
+    if (isWin(result)) {
+      setGameOver(true);
+      toast((t) => (
+        <span>
+          'Congratulations! You guessed the word!
+          <button onClick={() => {
+            toast.dismiss(t.id)
+            restartGame();
+          }}>
+            Restart
+          </button>
+        </span>
+      ), {
+        icon: '👏',
+        duration: Infinity,
+      });
+    }
+
     setInputValues(defaultValues);
   };
+
+  const isWin = (result: GuessResult[]) => result.every(item => item.score === 'hit');
+
+  const restartGame = () => { 
+    setGuessResult([]);
+    setAttempt(0);
+    pickAnswer();
+    setInputValues(defaultValues);
+    setGameOver(false);
+  }
+
+  const pickAnswer = () => { 
+    const answer = WordList[Math.floor(Math.random() * WordList.length)];
+    setAnswer(answer);
+  }
 
   const scoreStyle = (score: Score) => {
     switch (score) {
@@ -106,30 +153,29 @@ function Wordle() {
             </div>
         ))}
       </div>
-      <div className="form">
-        <div className="inputContainer">
-          <PinInput size="lg"
-            placeholder=""
-            values={inputValues}
-            onKeyDown={keyDown}
-            autoFocus
-            autoTab
-            onChange={(value, index, values) => setInputValues(values.map(v => v.toUpperCase()))}
-          />
+      {!gameOver &&
+        <div className="form">
+          <div className="inputContainer">
+            <PinInput size="lg"
+              placeholder=""
+              values={inputValues}
+              onKeyDown={keyDown}
+              autoFocus
+              autoTab
+              onChange={(value, index, values) => setInputValues(values.map(v => v.toUpperCase()))}
+            />
+          </div>
+
+            <button className="submitButton" onClick={formSubmit}>
+              {
+                inputValues.filter(Boolean).length === 5 ?  
+                  <p> Submit</p> :
+                  <p>Make a guess</p>
+              }
+              </button>
         </div>
+      }
 
-          <button className="submitButton" onClick={formSubmit}>
-            {
-              inputValues.filter(Boolean).length === 5 ?  
-                <p> Submit</p> :
-                <p>Make a guess</p>
-            }
-            </button>
-      </div>
-
-      <div className="">
-
-      </div>
     </>
   )
 }
