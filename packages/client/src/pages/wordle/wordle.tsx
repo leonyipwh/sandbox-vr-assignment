@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import './wordle.scss';
 import { WordLength, WordList, GameRounds } from '@shared/config.ts';
 import toast from 'react-hot-toast';
 import { PinInput } from 'react-input-pin-code'
+import './wordle.scss';
 
 type Score = 'hit' | 'present' | 'miss';
 interface GuessResult {
