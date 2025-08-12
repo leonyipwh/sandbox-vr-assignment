@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './wordle.scss';
 import { WordLength, WordList, GameRounds } from '@shared/config.ts';
-
+import toast from 'react-hot-toast';
 import { PinInput } from 'react-input-pin-code'
 
 type Score = 'hit' | 'present' | 'miss';
@@ -43,7 +43,7 @@ function Wordle() {
     }
 
     if (!WordList.includes(validInput)) {
-      console.log('Invalid word');
+      toast.error('Invalid word');
       return;
     }
 
