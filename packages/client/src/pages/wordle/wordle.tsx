@@ -139,7 +139,7 @@ function Wordle() {
   };
 
   return (
-    <>
+    <div className='wordle'>
       <div className="guessResult">
         {
           guessResult.map((guess, index) => (
@@ -176,7 +176,7 @@ function Wordle() {
         </div>
       }
 
-    </>
+    </div>
   )
 }
 
