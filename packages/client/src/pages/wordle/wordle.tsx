@@ -1,7 +1,6 @@
-// import { GameRounds } from "@shared/config.ts";
-import React from 'react';
+import React, { useEffect } from 'react';
 import './wordle.scss';
-import { WordLength } from '@shared/config.ts';
+import { WordLength, WordList, GameRounds } from '@shared/config.ts';
 
 import { PinInput } from 'react-input-pin-code'
 
@@ -14,9 +13,21 @@ interface GuessResult {
 function Wordle() {
   const defaultValues = ['', '', '', '', ''];
 
+  const [answer, setAnswer] = React.useState<string>('');
   const [inputValues, setInputValues] = React.useState(defaultValues);
   const [guessResult, setGuessResult] = React.useState<GuessResult[][]>([]);
-  // console.log(GameRounds);
+  const [attempt, setAttempt] = React.useState<number>(0);
+
+  useEffect(() => {
+    const answer = WordList[Math.floor(Math.random() * WordList.length)];
+    setAnswer(answer);
+  }, []);
+
+  useEffect(() => {
+    if (attempt >= GameRounds) {
+      console.log('Game Over! The answer is:', answer);
+    }
+  }, [attempt]);
 
   const keyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (/\d/.test(event.key)) {
@@ -25,20 +36,23 @@ function Wordle() {
   };
 
   const formSubmit = () => {
-    const validInput = inputValues.filter(Boolean);
+    const validInput = inputValues.filter(Boolean).join('').toUpperCase();
 
     if (validInput.length !== WordLength) {
       return;
     }
 
-    const answer = 'HELLO';
+    if (!WordList.includes(validInput)) {
+      console.log('Invalid word');
+      return;
+    }
 
     checkAnswer(validInput, answer);
   };
 
-  const checkAnswer = (validInput: string[], answer: string) => {
+  const checkAnswer = (validInput: string, answer: string) => {
     const result: GuessResult[]= [];
-    validInput.map((letter, index) => {
+    Array.from(validInput).map((letter, index) => {
       let score: Score = 'miss';
       const text = letter.toUpperCase();
       const upperCaseAnswer = answer.toUpperCase();
@@ -58,6 +72,8 @@ function Wordle() {
     });
 
     setGuessResult(currentGuess => [...currentGuess, result]);
+
+    setAttempt(attempt + 1);
 
     setInputValues(defaultValues);
   };
@@ -109,6 +125,10 @@ function Wordle() {
                 <p>Make a guess</p>
             }
             </button>
+      </div>
+
+      <div className="">
+
       </div>
     </>
   )
