@@ -11,7 +11,7 @@ interface GuessResult {
 }
 
 function Wordle() {
-  const defaultValues = ['', '', '', '', ''];
+  const defaultValues = Array(WordLength).fill('');
 
   const [answer, setAnswer] = React.useState<string>('');
   const [inputValues, setInputValues] = React.useState(defaultValues);
