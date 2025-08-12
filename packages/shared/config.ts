@@ -1,3 +1,5 @@
+export const WordLength = 5;
+
 export const WordList = [
   'HELLO',
   'WORLD',

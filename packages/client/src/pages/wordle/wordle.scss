@@ -1,18 +1,46 @@
 .guessResult {
-  width: 300px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: 5px;
-  margin-bottom: 10px;
-  font-size: 2rem;
+  height: 30vh;
+  
+  &__row {
+    width: 300px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+    margin-bottom: 10px;
+    font-size: 2rem;
 
-  div {
-    color: white;
-    background-color: #787c7e;
-    display: inline-flex;
+    div {
+      color: white;
+      background-color: #787c7e;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #d3d6da;
+      text-transform: uppercase;
+    }
+  }
+}
+
+
+
+.form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 200px;
+
+  .inputContainer {
+    display: flex;
     justify-content: center;
-    align-items: center;
-    border: 2px solid #d3d6da;
-    text-transform: uppercase;
+  }
+
+  button {
+    width: 200px;
+    margin: auto;
+    margin-top: 30px;
+    border-radius: 4px;
+    background-color: #d3d6da;
+    border: 0;
+    cursor: pointer;
   }
 }
