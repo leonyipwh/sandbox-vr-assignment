@@ -6,6 +6,9 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "paths": {
+      "@shared/*": ["../shared/*"],
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",
