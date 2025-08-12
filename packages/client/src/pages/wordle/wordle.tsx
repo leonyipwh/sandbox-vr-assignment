@@ -47,6 +47,10 @@ function Wordle() {
     if (/\d/.test(event.key)) {
       event.preventDefault();
     }
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      formSubmit();
+    }
   };
 
   const formSubmit = () => {
@@ -108,7 +112,15 @@ function Wordle() {
     }
 
     setInputValues(defaultValues);
+    inputFocus();
   };
+
+  const inputFocus = () => { 
+    const inputEl = document?.getElementById('input-0');
+    if (inputEl) {
+      (inputEl as HTMLElement).focus();
+    }
+  }
 
   const isWin = (result: GuessResult[]) => result.every(item => item.score === 'hit');
 
@@ -118,6 +130,7 @@ function Wordle() {
     pickAnswer();
     setInputValues(defaultValues);
     setGameOver(false);
+    inputFocus();
   }
 
   const pickAnswer = () => { 
@@ -157,6 +170,7 @@ function Wordle() {
         <div className="form">
           <div className="inputContainer">
             <PinInput size="lg"
+              id="input"
               placeholder=""
               values={inputValues}
               onKeyDown={keyDown}
