@@ -1,14 +1,9 @@
 import React, { useEffect } from 'react';
 import { WordLength, WordList, GameRounds } from '@shared/config.ts';
 import toast from 'react-hot-toast';
-import { PinInput } from 'react-input-pin-code'
+import { PinInput } from 'react-input-pin-code';
+import type { GuessResult, Score } from '@shared/wordle.interface';
 import './wordle.scss';
-
-type Score = 'hit' | 'present' | 'miss';
-interface GuessResult {
-  text: string;
-  score: Score
-}
 
 function Wordle() {
   const defaultValues = Array(WordLength).fill('');
