@@ -33,7 +33,7 @@ function Wordle() {
             toast.dismiss(t.id)
             restartGame();
           }}>
-            Restart
+            <p>Restart</p>
           </button>
         </span>
       ), {
@@ -102,7 +102,7 @@ function Wordle() {
             toast.dismiss(t.id)
             restartGame();
           }}>
-            Restart
+            <p>Restart</p>
           </button>
         </span>
       ), {
