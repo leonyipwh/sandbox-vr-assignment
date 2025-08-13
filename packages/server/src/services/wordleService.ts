@@ -5,19 +5,22 @@ import type { Score, GuessResult } from '../../../shared/wordle.interface';
 
 export class WordleService {
   // private answer: string = '';
-  private candidates: string[];
-  private history: Array<{ guess: string, scores: string[] }>;
+  private candidates: string[] = WordList.map(w => w.toUpperCase());
+  private history: Array<{ guess: string, scores: string[] }> = [];
+  private gameRound: number = 0;
 
   constructor() {
-    this.candidates = WordList.map(w => w.toUpperCase());
-    this.history = [];
+    this.init();
   }
 
-  // public getAnswer(): string {
-  //   return this.answer;
-  // }
+  private init(): void { 
+    this.gameRound = 0;
+    this.history = [];
+    this.candidates = WordList.map(w => w.toUpperCase());
+  }
 
   public guess(guessInput: string): GuessResult { 
+    this.gameRound++;
     guessInput = guessInput.toUpperCase();
 
     // For each candidate, score the guess
@@ -40,8 +43,6 @@ export class WordleService {
       const ss = this.scoreSummary(s.scores);
       return ss.hit === minScore.hit && ss.present === minScore.present;
     });
-
-    console.log('Min candidates:', minCandidates);
     
     // Pick min candidate score
     const randomIndex = Math.floor(Math.random() * minCandidates.length);
@@ -56,8 +57,21 @@ export class WordleService {
         return arraysEqual(this.scoreGuess(guess, candidate), scores);
       });
     });
+    
+    if (this.gameRound >= GameRounds) {
+      this.init();
+    }
+
+    if (this.isWin(currentScores)) {
+      
+      this.init();
+    }
 
     return { text: guessInput, scores: currentScores };
+  }
+
+  private isWin(scores: string[]): boolean {
+    return scores.every(score => score === 'hit');
   }
 
   private scoreGuess(guess, answer) {
