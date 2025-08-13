@@ -12,7 +12,6 @@ function Wordle() {
 
   const [gameOver, setGameOver] = React.useState<boolean>(false);
   const [room, setRoom] = React.useState<string>('');
-  const [answer, setAnswer] = React.useState<string>('');
   const [inputValues, setInputValues] = React.useState(defaultValues);
   const [guessResult, setGuessResult] = React.useState<GuessResult[]>([]);
   const [attempt, setAttempt] = React.useState<number>(0);
@@ -25,17 +24,16 @@ function Wordle() {
     if (attempt >= GameRounds) {
       setGameOver(true);
       toast((t) => (
-        <span>
-          Game Over!
+        <div>
+          <p>Game Over 😭</p>
           <button onClick={() => {
             toast.dismiss(t.id)
             restartGame();
           }}>
             <p>Restart</p>
           </button>
-        </span>
+        </div>
       ), {
-        icon: '😭',
         duration: Infinity,
       });
     }
@@ -103,7 +101,7 @@ function Wordle() {
       setGameOver(true);
       toast((t) => (
         <span>
-          Congratulations! You guessed the word!
+          👏 Congratulations! You guessed the word!
           <button onClick={() => {
             toast.dismiss(t.id)
             restartGame();
@@ -112,7 +110,6 @@ function Wordle() {
           </button>
         </span>
       ), {
-        icon: '👏',
         duration: Infinity,
       });
     }
