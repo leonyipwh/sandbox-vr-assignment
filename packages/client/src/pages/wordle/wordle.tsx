@@ -145,7 +145,6 @@ function Wordle() {
     setInputValues(defaultValues);
     setGameOver(false);
     inputFocus();
-    // init();
   }
   
   const scoreStyle = (score: Score) => {
