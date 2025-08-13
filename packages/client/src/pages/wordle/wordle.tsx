@@ -5,18 +5,37 @@ import { PinInput } from 'react-input-pin-code';
 import type { GuessResult, Score } from '@shared/wordle.interface';
 import './wordle.scss';
 
+import { startGame, guess } from "../../services/wordleService.ts";
+
 function Wordle() {
   const defaultValues = Array(WordLength).fill('');
 
   const [gameOver, setGameOver] = React.useState<boolean>(false);
+  const [room, setRoom] = React.useState<string>('');
   const [answer, setAnswer] = React.useState<string>('');
   const [inputValues, setInputValues] = React.useState(defaultValues);
-  const [guessResult, setGuessResult] = React.useState<GuessResult[][]>([]);
+  const [guessResult, setGuessResult] = React.useState<GuessResult[]>([]);
   const [attempt, setAttempt] = React.useState<number>(0);
 
   useEffect(() => {
-    pickAnswer();
+    init();
   }, []);
+
+  const init = async () => {
+      try {
+        const response = await startGame();
+        if (response.ok) {
+          const { roomNumber } = await response.json(); 
+          console.log('roomNumber', roomNumber);
+          setRoom(roomNumber)
+        } else {
+            throw new Error('Failed to fetch data');
+        }
+      } catch (error) {
+        console.error('Error:', error); 
+        errorHandling();
+      }
+  }
 
   useEffect(() => {
     if (attempt >= GameRounds) {
@@ -60,32 +79,24 @@ function Wordle() {
       return;
     }
 
-    checkAnswer(validInput, answer);
+    checkAnswer(validInput);
   };
 
-  const checkAnswer = (validInput: string, answer: string) => {
-    const result: GuessResult[]= [];
-    Array.from(validInput).map((letter, index) => {
-      let score: Score = 'miss';
-      const text = letter.toUpperCase();
-      const upperCaseAnswer = answer.toUpperCase();
-
-      if (text === upperCaseAnswer[index]) {
-        score = 'hit';
+  const checkAnswer = async(validInput: string) => {
+    let result: GuessResult = { text: validInput, scores: [] };
+    try {
+      const response = await guess(room, validInput);  
+      if (response.ok) {
+        result = await response.json();
+        console.log('result', result );
       }
-
-      if (text !== upperCaseAnswer[index] && upperCaseAnswer.includes(text)) {
-        score = 'present';
-      }
-
-      result.push({
-        text,
-        score,
-      });
-    });
+    } catch (error) {
+      console.log('error guess');
+      errorHandling();
+      return;
+    }
 
     setGuessResult(currentGuess => [...currentGuess, result]);
-
     setAttempt(attempt + 1);
 
     if (isWin(result)) {
@@ -110,6 +121,22 @@ function Wordle() {
     inputFocus();
   };
 
+  const errorHandling = () => {
+    toast.error((t) => (
+    <span>
+      Somthing went wrong!
+      <button onClick={() => {
+        toast.dismiss(t.id)
+        window.location.reload();
+      }}>
+        <p>Refresh</p>
+      </button>
+    </span>
+  ), {
+    duration: Infinity,
+  });
+  }
+
   const inputFocus = () => { 
     const inputEl = document?.getElementById('input-0');
     if (inputEl) {
@@ -117,22 +144,16 @@ function Wordle() {
     }
   }
 
-  const isWin = (result: GuessResult[]) => result.every(item => item.score === 'hit');
+  const isWin = (result: GuessResult) => result.scores.every(score => score === 'hit');
 
   const restartGame = () => { 
     setGuessResult([]);
     setAttempt(0);
-    pickAnswer();
     setInputValues(defaultValues);
     setGameOver(false);
     inputFocus();
   }
-
-  const pickAnswer = () => { 
-    const answer = WordList[Math.floor(Math.random() * WordList.length)];
-    setAnswer(answer);
-  }
-
+  
   const scoreStyle = (score: Score) => {
     switch (score) {
       case 'hit':
@@ -150,12 +171,12 @@ function Wordle() {
     <div className='wordle'>
       <div className="guessResult">
         {
-          guessResult.map((guess, index) => (
+          guessResult.map(({text, scores}, index) => (
             <div className="guessResult__row" key={index}>
               {
-                Array.from(guess).map((item, i) => (
-                  <div className={'guessResult__letter ' + scoreStyle(item.score)} key={i}>
-                    {item.text}
+                Array.from(scores).map((score, i) => (
+                  <div className={'guessResult__letter ' + scoreStyle(score)} key={i}>
+                    {text[i].toUpperCase()}
                   </div>
               ))}
             </div>
@@ -184,7 +205,6 @@ function Wordle() {
               </button>
         </div>
       }
-
     </div>
   )
 }
