@@ -63,7 +63,6 @@ export class WordleService {
     });
 
     if (this.isWin(currentScores)) {
-      console.log('You win!');
       saveResult({
         roomNumber: this.roomNumber,
         endRound: this.gameRound,
@@ -72,8 +71,6 @@ export class WordleService {
       });
       this.init();
     } else if (this.gameRound >= GameRounds) {
-      console.log('lost');
-      
       this.init();
     }
 
