@@ -12,4 +12,4 @@ export const WordList = [
   'SCARE'
 ]
 
-export const GameRounds = 3;
+export const GameRounds = 5;
