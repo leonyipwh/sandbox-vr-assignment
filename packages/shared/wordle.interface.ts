@@ -1,6 +1,7 @@
 export const WordleUrl = {
   'START_GAME': '/start',
   'GUESS': '/guess',
+  'RANKING': '/ranking'
 }
 
 export type Score = 'hit' | 'present' | 'miss';

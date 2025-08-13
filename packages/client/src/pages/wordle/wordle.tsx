@@ -2,23 +2,37 @@ import React, { useEffect } from 'react';
 import { WordLength, WordList, GameRounds } from '@shared/config.ts';
 import toast from 'react-hot-toast';
 import { PinInput } from 'react-input-pin-code';
-import type { GuessResult, Score } from '@shared/wordle.interface';
+import type { GuessResult, Score, RecordResult } from '@shared/wordle.interface';
 import './wordle.scss';
 
-import { startGame, guess } from "../../services/wordleService.ts";
+import { startGame, guess, getRanking } from "../../services/wordleService.ts";
+import { getTimeGapHHmm } from "../../utils/time.ts"
 
 function Wordle() {
   const defaultValues = Array(WordLength).fill('');
 
   const [gameOver, setGameOver] = React.useState<boolean>(false);
   const [room, setRoom] = React.useState<string>('');
-  const [inputValues, setInputValues] = React.useState(defaultValues);
+  const [inputValues, setInputValues] = React.useState<string[]>(defaultValues);
   const [guessResult, setGuessResult] = React.useState<GuessResult[]>([]);
   const [attempt, setAttempt] = React.useState<number>(0);
+  const [leaderboard, setLeaderboard] = React.useState<RecordResult[]>([]);
 
   useEffect(() => {
     init();
+    updateLeaderboard();
   }, []);
+
+  const updateLeaderboard = async () => {
+    try {
+      const response = await getRanking();
+      if (response.ok) {
+        const ranking = await response.json();
+        console.log(ranking);
+        setLeaderboard(ranking);
+      }
+    } catch {}
+  }
 
   useEffect(() => {
     if (attempt >= GameRounds) {
@@ -46,7 +60,7 @@ function Wordle() {
         const { roomNumber } = await response.json(); 
         setRoom(roomNumber)
       } else {
-          throw new Error('Failed to fetch data');
+        throw new Error('Failed to fetch data');
       }
     } catch (error) {
       errorHandling();
@@ -145,6 +159,7 @@ function Wordle() {
     setInputValues(defaultValues);
     setGameOver(false);
     inputFocus();
+    updateLeaderboard();
   }
   
   const scoreStyle = (score: Score) => {
@@ -162,6 +177,25 @@ function Wordle() {
 
   return (
     <div className='wordle'>
+
+      <div className='leaderboard'>
+        <div className='title'>Leaderboard</div>
+        <div className="ranking">
+          <div className='icons'>
+            <div className='icons__item'>🏆</div>
+            <div className='icons__item'>🥈</div>
+            <div className='icons__item'>🥉</div>
+          </div>
+          <div className='result'>
+            {leaderboard.map((record) => (
+              <div className='result__item'>
+                {getTimeGapHHmm(record.startTime, record.endTime)}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div className="guessResult">
         {
           guessResult.map(({text, scores}, index) => (
