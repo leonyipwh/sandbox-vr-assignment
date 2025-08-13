@@ -44,13 +44,11 @@ function Wordle() {
       const response = await startGame();
       if (response.ok) {
         const { roomNumber } = await response.json(); 
-        console.log('roomNumber', roomNumber);
         setRoom(roomNumber)
       } else {
           throw new Error('Failed to fetch data');
       }
     } catch (error) {
-      console.error('Error:', error); 
       errorHandling();
     }
   }
@@ -86,7 +84,6 @@ function Wordle() {
       const response = await guess(room, validInput);  
       if (response.ok) {
         result = await response.json();
-        console.log('result', result );
       }
     } catch (error) {
       errorHandling();
@@ -148,7 +145,7 @@ function Wordle() {
     setInputValues(defaultValues);
     setGameOver(false);
     inputFocus();
-    init();
+    // init();
   }
   
   const scoreStyle = (score: Score) => {
