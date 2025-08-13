@@ -6,5 +6,6 @@ export const saveResult = (result: RecordResult): void => {
 }
 
 export const ranking = () => {
-  return Records.sort((a, b) => (b.endTime - b.startTime) - (a.endTime - a.startTime));
+  Records.sort((a, b) => (a.endTime - a.startTime) - (b.endTime - b.startTime));
+  return Records.slice(0, 3);
 }
