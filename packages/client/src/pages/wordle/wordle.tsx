@@ -6,7 +6,8 @@ import type { GuessResult, Score, RecordResult } from '@shared/wordle.interface'
 import './wordle.scss';
 
 import { startGame, guess, getRanking } from "../../services/wordleService.ts";
-import { getTimeGapHHmm } from "../../utils/time.ts"
+
+import Leaderboard from "../../components/leaderboard/leaderboard.tsx";
 
 function Wordle() {
   const defaultValues = Array(WordLength).fill('');
@@ -28,7 +29,6 @@ function Wordle() {
       const response = await getRanking();
       if (response.ok) {
         const ranking = await response.json();
-        console.log(ranking);
         setLeaderboard(ranking);
       }
     } catch {}
@@ -178,23 +178,7 @@ function Wordle() {
   return (
     <div className='wordle'>
 
-      <div className='leaderboard'>
-        <div className='title'>Leaderboard</div>
-        <div className="ranking">
-          <div className='icons'>
-            <div className='icons__item'>🏆</div>
-            <div className='icons__item'>🥈</div>
-            <div className='icons__item'>🥉</div>
-          </div>
-          <div className='result'>
-            {leaderboard.map((record) => (
-              <div className='result__item'>
-                {getTimeGapHHmm(record.startTime, record.endTime)}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <Leaderboard data={leaderboard} />
 
       <div className="guessResult">
         {
