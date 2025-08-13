@@ -26,7 +26,7 @@ function Wordle() {
       setGameOver(true);
       toast((t) => (
         <span>
-          Game Over! The answer is: {answer}
+          Game Over!
           <button onClick={() => {
             toast.dismiss(t.id)
             restartGame();
@@ -152,6 +152,7 @@ function Wordle() {
     setInputValues(defaultValues);
     setGameOver(false);
     inputFocus();
+    init();
   }
   
   const scoreStyle = (score: Score) => {
