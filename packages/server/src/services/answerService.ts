@@ -1,5 +1,5 @@
 import { WordList } from '../../../shared/config';
-import type { Score } from '../../../shared/wordle.interface';
+import type { Score, GuessResult } from '../../../shared/wordle.interface';
 
 export class AnswerService {
   private answer: string;
@@ -16,8 +16,8 @@ export class AnswerService {
     return this.answer;
   }
 
-  public checkGuess(guessInput: string): { text: string; score: Score }[] { 
-    const result: { text: string; score: Score }[] = [];
+  public checkGuess(guessInput: string): GuessResult { 
+    const scoreArray: Score[] = [];
 
     Array.from(guessInput).map((letter, index) => {
       let score: Score = 'miss';
@@ -33,13 +33,10 @@ export class AnswerService {
         score = 'present';
       }
 
-      result.push({
-        text,
-        score,
-      });
+      scoreArray.push(score);
     });
 
-    return result;
+    return { text: guessInput, scores: scoreArray };
   }
 
   public resetAnswer(): void {
