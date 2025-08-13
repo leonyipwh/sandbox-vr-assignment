@@ -8,8 +8,7 @@ export class WordleService {
   private candidates: string[] = WordList.map(w => w.toUpperCase());
   private history: Array<{ guess: string, scores: string[] }> = [];
   private gameRound: number = 0;
-  private startTime: number = Date.now();
-  private endTime: number = 0;
+  private startTime: number = 0;
   private roomNumber: string;
 
   constructor(roomNumber: string) {
@@ -21,6 +20,7 @@ export class WordleService {
     this.gameRound = 0;
     this.history = [];
     this.candidates = WordList.map(w => w.toUpperCase());
+    this.startTime = Date.now();
   }
 
   public guess(guessInput: string): GuessResult { 
