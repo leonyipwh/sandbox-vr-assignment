@@ -1,10 +1,9 @@
 import { WordList, WordLength, GameRounds } from '../../../shared/config';
 import { arraysEqual } from "../utils/arrayUtils";
 
-import type { Score, GuessResult } from '../../../shared/wordle.interface';
+import type { GuessResult } from '../../../shared/wordle.interface';
 
 export class WordleService {
-  // private answer: string = '';
   private candidates: string[] = WordList.map(w => w.toUpperCase());
   private history: Array<{ guess: string, scores: string[] }> = [];
   private gameRound: number = 0;
