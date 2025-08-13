@@ -1,6 +1,8 @@
+import { WordleService } from '../services/wordleService';
+
 export interface Room {
   roomNumber: string;
-  answer
+  answer: WordleService;
 }
 
 export let rooms: Room[] = [];
