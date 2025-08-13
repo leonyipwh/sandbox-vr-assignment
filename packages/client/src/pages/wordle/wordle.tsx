@@ -89,7 +89,6 @@ function Wordle() {
         console.log('result', result );
       }
     } catch (error) {
-      console.log('error guess');
       errorHandling();
       return;
     }
