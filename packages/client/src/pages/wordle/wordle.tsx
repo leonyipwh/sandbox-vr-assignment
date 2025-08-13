@@ -21,22 +21,6 @@ function Wordle() {
     init();
   }, []);
 
-  const init = async () => {
-      try {
-        const response = await startGame();
-        if (response.ok) {
-          const { roomNumber } = await response.json(); 
-          console.log('roomNumber', roomNumber);
-          setRoom(roomNumber)
-        } else {
-            throw new Error('Failed to fetch data');
-        }
-      } catch (error) {
-        console.error('Error:', error); 
-        errorHandling();
-      }
-  }
-
   useEffect(() => {
     if (attempt >= GameRounds) {
       setGameOver(true);
@@ -56,6 +40,22 @@ function Wordle() {
       });
     }
   }, [attempt]);
+
+  const init = async () => {
+    try {
+      const response = await startGame();
+      if (response.ok) {
+        const { roomNumber } = await response.json(); 
+        console.log('roomNumber', roomNumber);
+        setRoom(roomNumber)
+      } else {
+          throw new Error('Failed to fetch data');
+      }
+    } catch (error) {
+      console.error('Error:', error); 
+      errorHandling();
+    }
+  }
 
   const keyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (/\d/.test(event.key)) {
