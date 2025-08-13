@@ -94,7 +94,6 @@ function Wordle() {
     }
 
     setGuessResult(currentGuess => [...currentGuess, result]);
-    setAttempt(attempt + 1);
 
     if (isWin(result)) {
       setGameOver(true);
@@ -111,10 +110,11 @@ function Wordle() {
       ), {
         duration: Infinity,
       });
+    } else {
+      setAttempt(attempt + 1);
+      setInputValues(defaultValues);
+      inputFocus();
     }
-
-    setInputValues(defaultValues);
-    inputFocus();
   };
 
   const errorHandling = () => {
