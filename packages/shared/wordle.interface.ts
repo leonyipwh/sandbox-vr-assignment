@@ -9,3 +9,10 @@ export interface GuessResult {
   text: string;
   scores: Score[]
 }
+
+export interface RecordResult {
+  roomNumber: string;
+  endRound: number;
+  startTime: number;
+  endTime: number;
+}

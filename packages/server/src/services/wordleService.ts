@@ -1,5 +1,6 @@
 import { WordList, WordLength, GameRounds } from '../../../shared/config';
 import { arraysEqual } from "../utils/arrayUtils";
+import { saveResult } from '../services/resultService';
 
 import type { GuessResult } from '../../../shared/wordle.interface';
 
@@ -7,8 +8,12 @@ export class WordleService {
   private candidates: string[] = WordList.map(w => w.toUpperCase());
   private history: Array<{ guess: string, scores: string[] }> = [];
   private gameRound: number = 0;
+  private startTime: number = Date.now();
+  private endTime: number = 0;
+  private roomNumber: string;
 
-  constructor() {
+  constructor(roomNumber: string) {
+    this.roomNumber = roomNumber;
     this.init();
   }
 
@@ -56,12 +61,18 @@ export class WordleService {
         return arraysEqual(this.scoreGuess(guess, candidate), scores);
       });
     });
-    
-    if (this.gameRound >= GameRounds) {
-      this.init();
-    }
 
     if (this.isWin(currentScores)) {
+      console.log('You win!');
+      saveResult({
+        roomNumber: this.roomNumber,
+        endRound: this.gameRound,
+        startTime: this.startTime,
+        endTime: Date.now()
+      });
+      this.init();
+    } else if (this.gameRound >= GameRounds) {
+      console.log('lost');
       
       this.init();
     }

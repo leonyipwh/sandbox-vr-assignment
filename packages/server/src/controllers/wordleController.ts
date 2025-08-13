@@ -1,12 +1,11 @@
 import { v4 as uuid } from 'uuid';
 import { Room, rooms } from '../models/roomModel';
 import { WordleService } from "../services/wordleService";
+import { ranking } from "../services/resultService";
 
 export const startGame = (req, res) => {
-  console.log('start game');
-  
   const roomNumber = uuid();
-  const newRoom: Room = { roomNumber, answer: new WordleService() };
+  const newRoom: Room = { roomNumber, answer: new WordleService(roomNumber) };
   
   rooms.push(newRoom);
   res.send({
@@ -25,4 +24,8 @@ export const guess = (req, res) => {
   const result = room.answer.guess(guess);
 
   return res.status(200).json(result);
+}
+
+export const getRanking = (req, res) => {
+  return res.send(ranking());
 }
