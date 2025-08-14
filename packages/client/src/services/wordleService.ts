@@ -1,4 +1,4 @@
-import { WordleUrl, type RecordResult } from "@shared/wordle.interface";
+import { WordleUrl } from "@shared/wordle.interface";
 
 export const startGame = async () => {
   return fetch(`${import.meta.env.VITE_SERVER_URL}${WordleUrl.START_GAME}`);

@@ -224,7 +224,7 @@ function Wordle() {
             onKeyDown={keyDown}
             autoFocus
             autoTab
-            onChange={(value, index, values) => setInputValues(values.map(v => v.toUpperCase()))}
+            onChange={(_, __, values) => setInputValues(values.map(v => v.toUpperCase()))}
           />
         </div>
 
