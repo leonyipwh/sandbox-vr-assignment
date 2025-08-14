@@ -10,7 +10,13 @@ import router from './routes/v1/router';
 app.use(cors());
 app.use(express.json());
 
-app.use(express.static(path.resolve(__dirname, '../client/dist')));
+const clientPath = path.resolve(__dirname, '../../../../client/dist');
+app.use(express.static(clientPath));
+
+app.get('/', (req, res) => {
+  const indexPath = path.resolve(clientPath, 'index.html');
+  res.sendFile(indexPath);
+});
 
 // Routes
 app.use('/api/v1', router);
