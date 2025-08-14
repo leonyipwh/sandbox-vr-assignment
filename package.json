@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:client": "cd packages/client && npm run build",
+    "build:server": "cd packages/server && tsc",
+    "build:all": "npm run build:client && npm run build:server",
+    "serve": "node packages/server/dist/server/src/index.js"
   },
   "keywords": [],
   "author": "",
