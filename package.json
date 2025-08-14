@@ -9,7 +9,7 @@
     "serve": "node packages/server/dist/server/src/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Leon Yip",
   "license": "ISC",
   "description": "",
   "workspaces": [
