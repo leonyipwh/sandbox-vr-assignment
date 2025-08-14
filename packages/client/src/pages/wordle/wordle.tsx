@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { WordLength, WordList, GameRounds } from '@shared/config.ts';
 import toast from 'react-hot-toast';
 import { PinInput } from 'react-input-pin-code';
-import type { GuessResult, Score, RecordResult, GameOverResult } from '@shared/wordle.interface';
+import type { GuessResult, Score, RecordResult } from '@shared/wordle.interface';
 import './wordle.scss';
 
 import { startGame, guess, getRanking } from "../../services/wordleService.ts";
@@ -19,6 +19,7 @@ function Wordle() {
   const [attempt, setAttempt] = React.useState<number>(0);
   const [leaderboard, setLeaderboard] = React.useState<RecordResult[]>([]);
   const [answer, setAnswer] = React.useState<string>('');
+  const [blankResult, setBlankResult] = React.useState<number>(GameRounds);
 
   useEffect(() => {
     init();
@@ -43,6 +44,8 @@ function Wordle() {
         duration: Infinity,
       });
     }
+
+    setBlankResult(GameRounds - attempt);
   }, [attempt]);
 
   const init = async () => {
@@ -112,6 +115,8 @@ function Wordle() {
 
     setGuessResult(currentGuess => [...currentGuess, result]);
 
+    setAttempt(attempt + 1);
+  
     if (isWin(result)) {
       setGameOver(true);
       toast((t) => (
@@ -128,7 +133,6 @@ function Wordle() {
         duration: Infinity,
       });
     } else {
-      setAttempt(attempt + 1);
       setInputValues(defaultValues);
       inputFocus();
     }
@@ -198,31 +202,40 @@ function Wordle() {
                   </div>
               ))}
             </div>
-        ))}
-      </div>
-      {!gameOver &&
-        <div className="form">
-          <div className="inputContainer">
-            <PinInput size="lg"
-              id="input"
-              placeholder=""
-              values={inputValues}
-              onKeyDown={keyDown}
-              autoFocus
-              autoTab
-              onChange={(value, index, values) => setInputValues(values.map(v => v.toUpperCase()))}
-            />
-          </div>
-
-            <button className="submitButton" onClick={formSubmit}>
+          ))}
+        {
+          Array.from({ length: blankResult}).map((_, index) => (
+            <div className="guessResult__row" key={index}>
               {
-                inputValues.filter(Boolean).length === 5 ?  
-                  <p> Submit</p> :
-                  <p>Make a guess</p>
-              }
-              </button>
+                Array.from({length: WordLength}).map((__, i) => (
+                  <div className={'guessResult__blank '} key={i}></div>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+
+      <div className={"form " + (gameOver ? 'hidden' : '')}>
+        <div className="inputContainer">
+          <PinInput size="lg"
+            id="input"
+            placeholder=""
+            values={inputValues}
+            onKeyDown={keyDown}
+            autoFocus
+            autoTab
+            onChange={(value, index, values) => setInputValues(values.map(v => v.toUpperCase()))}
+          />
         </div>
-      }
+
+          <button className="submitButton" onClick={formSubmit}>
+            {
+              inputValues.filter(Boolean).length === 5 ?  
+                <p> Submit</p> :
+                <p>Make a guess</p>
+            }
+            </button>
+      </div>
     </div>
   )
 }
