@@ -10,6 +10,6 @@ export const WordList = [
   'CRAZY',
   'BUGGY',
   'SCARE'
-]
+];
 
 export const GameRounds = 5;
