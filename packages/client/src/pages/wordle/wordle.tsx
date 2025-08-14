@@ -32,8 +32,8 @@ function Wordle() {
       setGameOver(true);
       toast((t) => (
         <div>
-          <p>Game Over 😭</p>
-          <p>The answer is <strong>{answer}</strong></p>
+          <p>😭</p>
+          <p>Game Over! The answer is <strong>{answer}</strong></p>
           <button onClick={() => {
             toast.dismiss(t.id)
             restartGame();
@@ -126,7 +126,8 @@ function Wordle() {
       setGameOver(true);
       toast((t) => (
         <span>
-          👏 Congratulations! You guessed the word!
+          <p>👏 </p>
+          <p>Congratulations! You guessed the word!</p>
           <button onClick={() => {
             toast.dismiss(t.id)
             restartGame();
