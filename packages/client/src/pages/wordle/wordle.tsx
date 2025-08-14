@@ -24,16 +24,6 @@ function Wordle() {
     updateLeaderboard();
   }, []);
 
-  const updateLeaderboard = async () => {
-    try {
-      const response = await getRanking();
-      if (response.ok) {
-        const ranking = await response.json();
-        setLeaderboard(ranking);
-      }
-    } catch {}
-  }
-
   useEffect(() => {
     if (attempt >= GameRounds) {
       setGameOver(true);
@@ -65,6 +55,16 @@ function Wordle() {
     } catch (error) {
       errorHandling();
     }
+  }
+
+  const updateLeaderboard = async () => {
+    try {
+      const response = await getRanking();
+      if (response.ok) {
+        const ranking = await response.json();
+        setLeaderboard(ranking);
+      }
+    } catch {}
   }
 
   const keyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
