@@ -20,6 +20,7 @@ function Wordle() {
   const [leaderboard, setLeaderboard] = React.useState<RecordResult[]>([]);
   const [answer, setAnswer] = React.useState<string>('');
   const [blankResult, setBlankResult] = React.useState<number>(GameRounds);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   useEffect(() => {
     init();
@@ -85,7 +86,7 @@ function Wordle() {
   const formSubmit = () => {
     const validInput = inputValues.filter(Boolean).join('').toUpperCase();
 
-    if (validInput.length !== WordLength) {
+    if (loading || validInput.length !== WordLength) {
       return;
     }
 
@@ -97,7 +98,9 @@ function Wordle() {
     checkAnswer(validInput);
   };
 
-  const checkAnswer = async(validInput: string) => {
+  const checkAnswer = async (validInput: string) => {
+    setLoading(true);
+
     let result: GuessResult = { text: validInput, scores: [] };
     try {
       const response = await guess(room, validInput);  
@@ -107,6 +110,8 @@ function Wordle() {
     } catch (error) {
       errorHandling();
       return;
+    } finally {
+      setLoading(false);
     }
 
     if (result.answer) {
@@ -230,9 +235,14 @@ function Wordle() {
 
           <button className="submitButton" onClick={formSubmit}>
             {
-              inputValues.filter(Boolean).length === 5 ?  
-                <p> Submit</p> :
-                <p>Make a guess</p>
+            loading ?
+              <p>Loading...</p> :
+              <>
+                { inputValues.filter(Boolean).length === 5 ?  
+                  <p> Submit</p> :
+                  <p>Make a guess</p>
+                }
+              </>
             }
             </button>
       </div>
