@@ -1,4 +1,4 @@
-# sandox-vr-assignment
+# sandbox-vr-assignment
 
 ## Project Scope
 - Task 1, 2, 3
