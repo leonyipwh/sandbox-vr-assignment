@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { WordLength, WordList, GameRounds } from '@shared/config.ts';
 import toast from 'react-hot-toast';
 import { PinInput } from 'react-input-pin-code';
-import type { GuessResult, Score, RecordResult } from '@shared/wordle.interface';
+import type { GuessResult, Score, RecordResult, GameOverResult } from '@shared/wordle.interface';
 import './wordle.scss';
 
 import { startGame, guess, getRanking } from "../../services/wordleService.ts";
@@ -18,6 +18,7 @@ function Wordle() {
   const [guessResult, setGuessResult] = React.useState<GuessResult[]>([]);
   const [attempt, setAttempt] = React.useState<number>(0);
   const [leaderboard, setLeaderboard] = React.useState<RecordResult[]>([]);
+  const [answer, setAnswer] = React.useState<string>('');
 
   useEffect(() => {
     init();
@@ -30,6 +31,7 @@ function Wordle() {
       toast((t) => (
         <div>
           <p>Game Over 😭</p>
+          <p>The answer is <strong>{answer}</strong></p>
           <button onClick={() => {
             toast.dismiss(t.id)
             restartGame();
@@ -104,6 +106,10 @@ function Wordle() {
       return;
     }
 
+    if (result.answer) {
+      setAnswer(result.answer);
+    }
+
     setGuessResult(currentGuess => [...currentGuess, result]);
 
     if (isWin(result)) {
@@ -158,6 +164,7 @@ function Wordle() {
     setAttempt(0);
     setInputValues(defaultValues);
     setGameOver(false);
+    setAnswer('');
     inputFocus();
     updateLeaderboard();
   }

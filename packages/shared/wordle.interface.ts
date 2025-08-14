@@ -8,7 +8,8 @@ export type Score = 'hit' | 'present' | 'miss';
 
 export interface GuessResult {
   text: string;
-  scores: Score[]
+  scores: Score[];
+  answer?: string;
 }
 
 export interface RecordResult {

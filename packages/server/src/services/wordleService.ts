@@ -62,6 +62,7 @@ export class WordleService {
       });
     });
 
+    // Game win
     if (this.isWin(currentScores)) {
       saveResult({
         roomNumber: this.roomNumber,
@@ -70,10 +71,19 @@ export class WordleService {
         endTime: Date.now()
       });
       this.init();
-    } else if (this.gameRound >= GameRounds) {
+      return { text: guessInput, scores: currentScores };
+    }
+    
+    // Game lose
+    if (this.gameRound >= GameRounds) {
+      // Pick min candidate score
+      const randomIndex = Math.floor(Math.random() * this.candidates.length);
+      const answer = this.candidates[randomIndex];
       this.init();
+      return { text: guessInput, scores: currentScores, answer };
     }
 
+    // Game play
     return { text: guessInput, scores: currentScores };
   }
 
